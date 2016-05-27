@@ -5,6 +5,7 @@ import SummaryComponent from 'components/SummaryComponent';
 import EducationSummary from 'components/EducationSummary';
 import ProjectsSummary from 'components/ProjectsSummary';
 import AppBar from 'components/AppBar';
+import AddProjectForm from 'components/AddProjectForm';
 
 export default class EmployeeResume extends React.Component {
   constructor() {
@@ -15,6 +16,10 @@ export default class EmployeeResume extends React.Component {
     methods.filter(nonCoreMethods).forEach(method => {
       this[method] = this[method].bind(this);
     });
+
+    this.state = {
+      activeAddProjectState: false
+    };
   }
 
   render() {
@@ -46,14 +51,22 @@ export default class EmployeeResume extends React.Component {
           }}></div>
           <div style={styles.section}>
             <div style={styles.headerTag}>Project Work</div>
+            <div style={styles.editTag} onClick={this.addProject}><i className="fa fa-plus"></i></div>
             <div style={{
               paddingTop: "10px"
             }}></div>
+            {this.state.activeAddProjectState && <AddProjectForm />}
             <ProjectsSummary mockdata={mockdata}/>
           </div>
         </div>
       </div>
     );
+  }
+
+  addProject() {
+    this.setState({
+      activeAddProjectState: true
+    });
   }
 
   getStyles() {
@@ -77,6 +90,13 @@ export default class EmployeeResume extends React.Component {
         color: "#FFFFFF",
         padding: "8px 12px",
         fontSize: "16px"
+      },
+      editTag: {
+        position: "absolute",
+        right: "10px",
+        top: "10px",
+        cursor: "pointer",
+        color: "#515050"
       }
     };
   }

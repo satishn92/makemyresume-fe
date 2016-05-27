@@ -10,3 +10,6 @@ Install Dependencies
 Run the Server
 ---------------
 `npm run start`
+
+## Run The Static Folder
+`python -m SimpleHTTPServer 8000`
