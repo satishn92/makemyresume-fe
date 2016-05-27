@@ -1,21 +1,10 @@
 import React from "react";
-
-function nonCoreMethods(method) {
-  // If a method is a core method, then do not bind it again.
-  let whiteList = [
-    "constructor",
-    "render",
-    "componentWillMount",
-    "componentDidMount",
-    "componentWillReceiveProps",
-    "componentWillUpdate",
-    "shouldComponentUpdate",
-    "componentWillUnmount"
-  ];
-  return whiteList.indexOf(method) < 0;
-}
+import { nonCoreMethods } from 'utils/PageUtils';
+import SessionStore from 'stores/SessionStore';
+import { PropTypes } from "react-router";
 
 export default class Home extends React.Component {
+  static contextTypes = { history: PropTypes.history };
 
   constructor() {
     super();
@@ -48,9 +37,46 @@ export default class Home extends React.Component {
               style={userType === "employer" ? styles.activeToggleBtn: styles.toggleBtn}
               onClick={this.setUserType.bind(null, "employer")}>Employer</div>
           </div>
+          {userType === "employee" && (
+            <div style={styles.formContainer}>
+              <div className="row">
+                <div className="three columns" style={{
+                  color: "#FFFFFF",
+                  verticalAlign: "middle",
+                  padding: "10px"
+                }}>Username</div>
+              <div className="nine columns">
+                  <input ref="usernameInput" type="text" style={styles.textInput} placeholder="Enter your Username" />
+                </div>
+              </div>
+              <div className="row" style={{
+                marginTop: "30px"
+              }}>
+                <div className="three columns" style={{
+                  color: "#FFFFFF",
+                  verticalAlign: "middle",
+                  padding: "10px"
+                }}>Password</div>
+                <div className="nine columns">
+                  <input ref="passwordInput" type="password" style={styles.textInput} placeholder="Enter your Password" />
+                </div>
+                <div style={styles.loginBtn} onClick={this.login}>Login</div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     );
+  }
+
+  login() {
+    let username = this.refs.usernameInput.value;
+    let userType = this.state.userType;
+    SessionStore.userType = userType;
+    SessionStore.username = username;
+    if (userType === "employee") {
+      this.context.history.replaceState(null, "/employee/resume");
+    }
   }
 
   setUserType(type) {
@@ -96,6 +122,25 @@ export default class Home extends React.Component {
         cursor: "pointer",
         width: "80px",
         padding: "5px 5px"
+      },
+      formContainer: {
+        width: "500px",
+        margin: "100px auto 0"
+      },
+      textInput: {
+        color: "#FFFFFF",
+        width: "100%",
+        background: "#2857A5",
+        border: "1px solid #FFFFFF",
+        padding: "10px"
+      },
+      loginBtn: {
+        padding: "12px",
+        background: "#FFFFFF",
+        margin: "50px auto 0",
+        width: "150px",
+        textAlign: "center",
+        cursor: "pointer"
       }
     }
   }
